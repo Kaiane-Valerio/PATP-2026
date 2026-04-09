@@ -2,7 +2,7 @@
 <?php
 
 $host = "localhost";
-$dbname = "ordem_servicos";
+$dbname = "ordens";
 $user = "root";
 $password = "";
 

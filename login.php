@@ -1,19 +1,48 @@
 <?php
 session_start();
 
+// 🔌 CONEXÃO
+$host = "localhost";
+$dbname = "ordens";
+$user = "root";
+$password = "";
+
+$conn = new mysqli($host, $user, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Erro na conexão: " . $conn->connect_error);
+}
+
 $erro = "";
 
+// 📥 PROCESSAR LOGIN
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $usuario = $_POST["usuario"];
+    $email = $_POST["email"];
     $senha = $_POST["senha"];
 
+    // 🔍 BUSCAR USUÁRIO NO BANCO
+    $stmt = $conn->prepare("SELECT * FROM operadores WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
 
-    if ($usuario == "admin" && $senha == "1234") {
-        $_SESSION["usuario"] = $usuario;
-        header("Location: inicial.php"); 
-        exit();
+    if ($resultado->num_rows > 0) {
+        $usuario = $resultado->fetch_assoc();
+
+        // 🔒 VERIFICAR SENHA
+        if (password_verify($senha, $usuario["senha"])) {
+
+            $_SESSION["usuario"] = $usuario["nome"];
+
+            header("Location: inicial.php");
+            exit();
+
+        } else {
+            $erro = "Senha incorreta!";
+        }
+
     } else {
-        $erro = "Usuário ou senha inválidos!";
+        $erro = "Usuário não encontrado!";
     }
 }
 ?>
@@ -22,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Sistema OS - Login</title>
+<title>Login - Sistema OS</title>
 
 <style>
 * {
@@ -36,7 +65,6 @@ body {
     height: 100vh;
     display: flex;
 }
-
 
 .left {
     width: 55%;
@@ -55,9 +83,7 @@ body {
 
 .left p {
     font-size: 18px;
-    opacity: 0.9;
 }
-
 
 .right {
     width: 45%;
@@ -67,17 +93,12 @@ body {
     align-items: center;
 }
 
-.login-box {
+.box {
     background: #fff;
     padding: 40px;
     width: 350px;
     border-radius: 12px;
     box-shadow: 0px 10px 25px rgba(0,0,0,0.1);
-}
-
-.login-box h2 {
-    margin-bottom: 25px;
-    color: #333;
 }
 
 input {
@@ -86,23 +107,15 @@ input {
     margin: 10px 0;
     border-radius: 6px;
     border: 1px solid #ccc;
-    transition: 0.3s;
-}
-
-input:focus {
-    border-color: #2c5364;
-    outline: none;
 }
 
 button {
     width: 100%;
     padding: 12px;
     background: #2c5364;
-    border: none;
     color: white;
-    font-size: 15px;
+    border: none;
     border-radius: 6px;
-    cursor: pointer;
 }
 
 button:hover {
@@ -113,9 +126,14 @@ button:hover {
     color: red;
     margin-bottom: 10px;
 }
-</style>
 
+.link {
+    text-align: center;
+    margin-top: 10px;
+}
+</style>
 </head>
+
 <body>
 
 <div class="left">
@@ -124,18 +142,22 @@ button:hover {
 </div>
 
 <div class="right">
-    <div class="login-box">
-        <h2>Acesso ao Sistema</h2>
+    <div class="box">
+        <h2>Login</h2>
 
         <?php if ($erro != "") { ?>
             <p class="erro"><?php echo $erro; ?></p>
         <?php } ?>
 
         <form method="POST">
-            <input type="text" name="usuario" placeholder="Usuário" required>
+            <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="senha" placeholder="Senha" required>
             <button type="submit">Entrar</button>
         </form>
+
+        <div class="link">
+            <a href="cadastro.php">Criar conta</a>
+        </div>
     </div>
 </div>
 

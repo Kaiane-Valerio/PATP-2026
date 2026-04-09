@@ -26,7 +26,6 @@ body {
     background: #f4f6f9;
 }
 
-
 .sidebar {
     width: 240px;
     height: 100vh;
@@ -76,11 +75,9 @@ body {
     font-size: 14px;
 }
 
-
 .content {
     padding: 30px;
 }
-
 
 .cards {
     display: flex;
@@ -119,18 +116,17 @@ body {
 </head>
 <body>
 
-
 <div class="sidebar">
     <h2>🛠 Sistema OS</h2>
     <a href="inicio.php">🏠 Inicio</a>
     <a href="ordens.php">📋 Ordens de Serviço</a>
     <a href="clientes.php">👥 Clientes</a>
+    <a href="cadastro.php">➕ Criar novo operador</a> <!-- BOTÃO ADICIONADO -->
     <a href="login.php">🚪 Sair</a>
 </div>
 
 <div class="main">
 
-  
     <div class="header">
         <h1>Inicio</h1>
         <div class="user">
@@ -138,7 +134,6 @@ body {
         </div>
     </div>
 
-   
     <div class="content">
 
         <div class="cards">
