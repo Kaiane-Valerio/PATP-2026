@@ -1,14 +1,16 @@
-<!-- Criar conexão com o banco de dados -->
 <?php
-
 $host = "localhost";
 $dbname = "ordens";
 $user = "root";
 $password = "";
 
-$conn = new mysqli($host, $user, $password, $dbname);
-if ($conn->connect_error) {
-    die("Conexão falhou: " . $conn->connect_error);
-}
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $password);
 
+    // 🔒 Modo de erro (ESSENCIAL)
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+} catch (PDOException $e) {
+    die("Erro na conexão: " . $e->getMessage());
+}
 ?>

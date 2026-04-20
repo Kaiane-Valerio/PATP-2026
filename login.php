@@ -33,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($senha, $usuario["senha"])) {
 
             $_SESSION["usuario"] = $usuario["nome"];
+            $_SESSION["usuario_id"] = $usuario["id"];
 
             header("Location: inicial.php");
             exit();
