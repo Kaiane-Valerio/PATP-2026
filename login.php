@@ -27,13 +27,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $resultado = $stmt->get_result();
 
     if ($resultado->num_rows > 0) {
-        $usuario = $resultado->fetch_assoc();
+        $operador = $resultado->fetch_assoc();
 
         // 🔒 VERIFICAR SENHA
-        if (password_verify($senha, $usuario["senha"])) {
+        if (password_verify($senha, $operador["senha"])) {
 
-            $_SESSION["usuario"] = $usuario["nome"];
-            $_SESSION["usuario_id"] = $usuario["id"];
+            $_SESSION["operador_nome"] = $operador["nome"];
+            $_SESSION["operador_id"] = $operador["id"];
 
             header("Location: inicial.php");
             exit();

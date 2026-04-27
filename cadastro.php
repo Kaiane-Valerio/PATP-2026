@@ -30,10 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {
             $mensagem = "Cadastro realizado com sucesso! Redirecionando para o login...";
-
-            // 🔄 REDIRECIONA APÓS 2 SEGUNDOS
             header("refresh:2;url=login.php");
-
         } else {
             $erro = "Erro ao cadastrar: " . $stmt->error;
         }
@@ -126,6 +123,23 @@ button:hover {
     background: #203a43;
 }
 
+/* BOTÃO VOLTAR */
+.voltar {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #ccc;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    color: #333;
+}
+
+.voltar:hover {
+    background: #999;
+}
+
 .msg {
     color: green;
     margin-bottom: 10px;
@@ -165,6 +179,9 @@ button:hover {
             <input type="text" name="identidade" placeholder="Identidade (RG/CPF)" required>
 
             <button type="submit">Cadastrar</button>
+
+            <!-- BOTÃO VOLTAR -->
+            <a href="login.php" class="voltar">Voltar</a>
         </form>
     </div>
 </div>
