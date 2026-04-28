@@ -69,201 +69,229 @@ if (isset($_POST["nova_os"])) {
 
         body {
             font-family: "Segoe UI", sans-serif;
-            background: #f4f6f9;
+            background: #eef2f7;
+            color: #1e293b;
         }
 
-        /* HEADER */
+        /* HEADER MESMO PADRÃO LOGIN */
         .header {
-            background: #1e3c72;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
-            padding: 20px 30px;
-            margin-bottom: 10px;
+
+            padding: 28px 35px;
+
             display: flex;
             justify-content: space-between;
             align-items: center;
+
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
         }
 
         .header h1 {
-            font-size: 20px;
+            font-size: 30px;
+            font-weight: 700;
         }
 
         .user {
+            display: flex;
+            align-items: center;
+            gap: 14px;
             font-size: 14px;
         }
+
+        .user a {
+            text-decoration: none;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .14);
+            transition: .25s;
+        }
+
+        .user a:hover {
+            background: rgba(255, 255, 255, .22);
+        }
+
 
         /* CONTAINER */
         .container {
             max-width: 1200px;
-            margin: 0 auto;
-
-            padding: 30px 20px 120px 20px;
+            margin: auto;
+            padding: 38px 22px 120px;
         }
 
-        /* CARDS RESUMO */
+
+        /* RESUMO */
         .cards {
-            display: flex;
-            gap: 20px;
-            margin: 30px 0;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 22px;
+            margin-bottom: 34px;
         }
 
         .card {
-            flex: 1;
-            min-width: 180px;
-            background: white;
-            padding: 22px;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            background: #fff;
+            padding: 26px;
+            border-radius: 18px;
+
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .06);
         }
 
         .card h3 {
             font-size: 14px;
-            color: #777;
+            color: #64748b;
+            margin-bottom: 12px;
         }
 
         .card p {
-            font-size: 22px;
-            font-weight: bold;
+            font-size: 34px;
+            font-weight: 700;
+            color: #1e3c72;
         }
 
-        /* LISTA DE CHAMADOS */
+
+        /* LISTA */
         .lista {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 24px;
-            margin-top: 10px;
         }
 
+
+        /* CHAMADO CARD */
         .chamado {
-            background: white;
-            padding: 20px;
-            border-radius: 14px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            transition: 0.3s;
+            background: #fff;
+            padding: 24px;
+            border-radius: 18px;
+
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .06);
+
+            transition: .25s;
             cursor: pointer;
         }
 
         .chamado:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        /* borda lateral por status */
-        .chamado h3 {
-            margin-bottom: 12px;
-        }
-
-        .chamado p {
-            color: #555;
-            margin-bottom: 14px;
-            line-height: 1.4;
-        }
-
-        /* STATUS */
-        .status {
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-
-        .status.aberto {
-            background: #dc3545;
-            color: white;
-        }
-
-        .status.andamento {
-            background: #ffc107;
-            color: #333;
-        }
-
-        .status.finalizado {
-            background: #28a745;
-            color: white;
-        }
-
-        /* DATA */
-        .data {
-            font-size: 12px;
-            color: #999;
-            margin-top: 8px;
-        }
-
-
-        /* CARD ESTILO FEED */
-        .chamado:hover {
             transform: translateY(-5px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, .08);
         }
 
-        .chamado.status-aberto {
-            border-left: 5px solid #dc3545;
+        .chamado h3 {
+            font-size: 19px;
+            margin-bottom: 14px;
         }
 
-        .chamado.status-andamento {
-            border-left: 5px solid #ffc107;
-        }
-
-        .chamado.status-finalizado {
-            border-left: 5px solid #28a745;
-        }
-
-        /* DESCRIÇÃO LIMITADA */
         .chamado p {
+            color: #475569;
+            line-height: 1.5;
+            margin-bottom: 18px;
+
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
-        /* BOTÃO FLUTUANTE */
+        /* borda status */
+        .chamado.status-aberto {
+            border-left: 5px solid #ef4444;
+        }
+
+        .chamado.status-andamento {
+            border-left: 5px solid #f59e0b;
+        }
+
+        .chamado.status-finalizado {
+            border-left: 5px solid #22c55e;
+        }
+
+
+        /* STATUS CHIPS */
+        .status {
+            display: inline-block;
+
+            padding: 7px 12px;
+
+            border-radius: 999px;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            margin-bottom: 12px;
+        }
+
+        .status.aberto {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status.andamento {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status.finalizado {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+
+        /* DATA */
+        .data {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+
+
+
+        /* BOTÃO PADRÃO LOGIN */
         .bottom-btn {
             position: fixed;
-            bottom: 20px;
+
             left: 50%;
+            bottom: 22px;
+
             transform: translateX(-50%);
 
-            background: #28a745;
+            background: #2a5298;
             color: white;
 
-            padding: 14px 28px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 15px 30px;
 
             border: none;
-            border-radius: 30px;
+            border-radius: 999px;
+
+            font-size: 16px;
+            font-weight: 600;
 
             cursor: pointer;
 
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-            transition: all 0.25s ease;
+            box-shadow: 0 12px 30px rgba(42, 82, 152, .30);
 
-            z-index: 1000;
+            transition: .25s;
+
+            z-index: 999;
         }
 
-        /* hover */
         .bottom-btn:hover {
-            transform: translateX(-50%) scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateX(-50%) scale(1.03);
         }
 
-        /* clique */
         .bottom-btn:active {
-            transform: translateX(-50%) scale(0.95);
+            transform: translateX(-50%) scale(.97);
         }
+
 
         /* MODAL */
         .modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            inset: 0;
+
             display: none;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+
+            background: rgba(15, 23, 42, .45);
             backdrop-filter: blur(4px);
         }
 
@@ -273,46 +301,117 @@ if (isset($_POST["nova_os"])) {
 
         .modal-content {
             background: white;
-            padding: 25px;
-            border-radius: 12px;
+
             width: 100%;
-            max-width: 400px;
-            animation: fadeIn 0.25s ease;
+            max-width: 440px;
+
+            padding: 35px;
+
+            border-radius: 18px;
+
+            box-shadow: 0 18px 45px rgba(0, 0, 0, .15);
+
+            animation: fadeIn .22s ease;
         }
 
         .modal-content h2 {
-            margin-bottom: 15px;
-        }
-
-        .modal-content input,
-        .modal-content textarea {
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-        }
-
-        .modal-content button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            background: #28a745;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
+            font-size: 28px;
+            margin-bottom: 18px;
+            color: #1e293b;
         }
 
         .close {
             float: right;
             cursor: pointer;
             font-weight: bold;
+            color: #64748b;
         }
+
+
+        /* INPUTS MESMO PADRÃO LOGIN */
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+
+            padding: 14px;
+            margin-bottom: 14px;
+
+            border: 1px solid #d6dbe3;
+            border-radius: 10px;
+
+            font-size: 15px;
+        }
+
+        .modal-content input:focus,
+        .modal-content textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, .12);
+        }
+
+        .modal-content textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+
+        .modal-content button {
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #2a5298;
+            color: white;
+
+            font-weight: 600;
+            font-size: 16px;
+
+            cursor: pointer;
+            transition: .25s;
+        }
+
+        .modal-content button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(42, 82, 152, .20);
+        }
+
+
+        /* EMPTY STATE */
+        .empty-state {
+            background: #fff;
+
+            padding: 50px 30px;
+            text-align: center;
+
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .06);
+        }
+
+        .empty-state h2 {
+            margin-bottom: 12px;
+        }
+
+        .btn-empty {
+            margin-top: 18px;
+
+            background: #2a5298;
+            color: white;
+
+            border: none;
+            border-radius: 10px;
+
+            padding: 14px 20px;
+            cursor: pointer;
+        }
+
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: scale(0.9);
+                transform: scale(.94);
             }
 
             to {
@@ -321,47 +420,24 @@ if (isset($_POST["nova_os"])) {
             }
         }
 
-        /* estado vazio */
-        .empty-state {
-            text-align: center;
-            margin-top: 80px;
-            padding: 20px;
-            color: #555;
-        }
 
-        .empty-state h2 {
-            margin-bottom: 10px;
-        }
+        @media(max-width:768px) {
 
-        .btn-empty {
-            margin-top: 20px;
-            padding: 12px 20px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
-        }
+            .header {
+                padding: 22px;
+                flex-direction: column;
+                gap: 12px;
+            }
 
-        .btn-empty:hover {
-            transform: scale(1.05);
-            background: #218838;
-        }
-
-        @media (max-width: 768px) {
             .container {
-                padding: 20px 15px 120px 15px;
+                padding: 24px 16px 120px;
             }
 
-            .cards {
-                gap: 15px;
-            }
-
+            .cards,
             .lista {
                 gap: 18px;
             }
+
         }
     </style>
 
@@ -373,7 +449,7 @@ if (isset($_POST["nova_os"])) {
         <h1>📋 Meus Chamados</h1>
         <div class="user">
             👤 <?php echo $_SESSION["cliente"]; ?> |
-            <a href="logout.php" style="color: #fff;">Sair</a>
+            <a href="loginCLiente.php">Sair</a>
         </div>
     </div>
 
