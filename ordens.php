@@ -226,7 +226,7 @@ function confirmarExclusao(){
 
 <div class="sidebar">
     <h2>OS Manager</h2>
-    <a href="#">Início</a>
+    <a href="inicial.php">Início</a>
     <a href="#">Ordens</a>
 </div>
 
