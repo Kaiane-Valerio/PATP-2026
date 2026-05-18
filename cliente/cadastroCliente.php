@@ -207,6 +207,22 @@ VALUES
             }
 
         }
+
+        .senha-box {
+            position: relative;
+        }
+
+        .senha-box input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .toggle {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            cursor: pointer;
+        }
     </style>
 
 </head>
@@ -255,12 +271,15 @@ VALUES
                     name="email"
                     placeholder="E-mail ou Login"
                     required>
-
-                <input
-                    type="password"
-                    name="senha"
-                    placeholder="Senha"
-                    required>
+                <div class="senha-box">
+                    <input
+                        type="password"
+                        name="senha"
+                        placeholder="Senha"
+                        id="senha"
+                        required>
+                    <span class="toggle" onclick="toggleSenha('senha', this)">👁️</span>
+                </div>
 
                 <input
                     type="text"
@@ -290,6 +309,20 @@ VALUES
         </div>
 
     </div>
+
+    <script>
+        function toggleSenha(id, el) {
+            const input = document.getElementById(id);
+
+            if (input.type === "password") {
+                input.type = "text";
+                el.textContent = "🙈"; // olho fechado
+            } else {
+                input.type = "password";
+                el.textContent = "👁️"; // olho aberto
+            }
+        }
+    </script>
 
 </body>
 

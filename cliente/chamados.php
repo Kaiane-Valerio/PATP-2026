@@ -10,7 +10,11 @@ if (!isset($_SESSION["cliente_id"])) {
 $cliente_id = $_SESSION["cliente_id"];
 
 // ================== BUSCAR CHAMADOS ==================
-$stmt = $pdo->prepare("SELECT * FROM chamado WHERE cliente_id = :id ORDER BY data_criacao DESC");
+$stmt = $pdo->prepare("SELECT c.*, o.nome AS operador_nome
+    FROM chamado c
+    LEFT JOIN operadores o ON c.operador_id = o.id
+    WHERE c.cliente_id = :id
+    ORDER BY c.data_criacao DESC");
 $stmt->bindParam(":id", $cliente_id);
 $stmt->execute();
 $chamados = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -44,6 +48,8 @@ if (isset($_POST["nova_os"])) {
             ":descricao" => $descricao,
             ":cliente_id" => $cliente_id
         ]);
+
+        $_SESSION["success"] = "Chamado criado!";
 
         // 🔥 evita reenviar form ao atualizar
         header("Location: " . $_SERVER["PHP_SELF"]);
@@ -160,6 +166,8 @@ if (isset($_POST["nova_os"])) {
 
         /* CHAMADO CARD */
         .chamado {
+            position: relative;
+
             background: #fff;
             padding: 24px;
             border-radius: 18px;
@@ -170,9 +178,23 @@ if (isset($_POST["nova_os"])) {
             cursor: pointer;
         }
 
+        .chamado::after {
+            content: "Ver detalhes";
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            font-size: 12px;
+            opacity: 0;
+            transition: .2s;
+        }
+
         .chamado:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px) scale(1.01);
             box-shadow: 0 18px 40px rgba(0, 0, 0, .08);
+        }
+
+        .chamado:hover::after {
+            opacity: .6;
         }
 
         .chamado h3 {
@@ -253,7 +275,7 @@ if (isset($_POST["nova_os"])) {
 
             transform: translateX(-50%);
 
-            background: #2a5298;
+            background: linear-gradient(135deg, #2a5298, #1e3c72);
             color: white;
 
             padding: 15px 30px;
@@ -439,6 +461,17 @@ if (isset($_POST["nova_os"])) {
             }
 
         }
+
+        .operador {
+            font-size: 13px;
+            margin-top: 10px;
+            color: #334155;
+        }
+
+        .operador.vazio {
+            color: #94a3b8;
+            font-style: italic;
+        }
     </style>
 
 </head>
@@ -449,7 +482,7 @@ if (isset($_POST["nova_os"])) {
         <h1>📋 Meus Chamados</h1>
         <div class="user">
             👤 <?php echo $_SESSION["cliente"]; ?> |
-            <a href="loginCLiente.php">Sair</a>
+            <a href="logout.php">Sair</a>
         </div>
     </div>
 
@@ -497,12 +530,25 @@ if (isset($_POST["nova_os"])) {
                         <h3><?php echo htmlspecialchars($c["titulo"]); ?></h3>
 
                         <p>
-                            <?php echo substr(htmlspecialchars($c["descricao"]), 0, 100); ?>...
+                            <?php
+                            $desc = htmlspecialchars($c["descricao"]);
+                            echo strlen($desc) > 100 ? substr($desc, 0, 100) . "..." : $desc; ?>
                         </p>
+
+                        <?php if (!empty($c["operador_nome"])): ?>
+                            <div class="operador">
+                                👨‍🔧 Em atendimento por: <?php echo htmlspecialchars($c["operador_nome"]); ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="operador vazio">
+                                ⏳ Aguardando operador
+                            </div>
+                        <?php endif; ?>
 
                         <span class="status <?php echo $classe; ?>">
                             <?php echo $c["status"]; ?>
                         </span>
+
 
                         <div class="data">
                             Criado em: <?php echo date("d/m/Y", strtotime($c["data_criacao"])); ?>
@@ -560,6 +606,10 @@ if (isset($_POST["nova_os"])) {
                 fecharModal();
             }
         }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") fecharModal();
+        });
     </script>
 
 </body>
