@@ -161,7 +161,6 @@ $primeiraLetra = strtoupper(substr($nomeUsuario, 0, 1));
 
     <div class="sidebar">
         <h2>🛠 Sistema OS</h2>
-        <a href="inicial.php">🏠 Início</a>
         <a href="ordens.php">📋 Ordens de Serviço</a>
         <a href="clientes.php">👥 Clientes</a>
         <a href="cadastro.php">➕ Criar novo operador</a>

@@ -9,26 +9,70 @@ if (!isset($_SESSION["cliente_id"])) {
 
 $cliente_id = $_SESSION["cliente_id"];
 
-// ================== BUSCAR CHAMADOS ==================
-$stmt = $pdo->prepare("SELECT c.*, o.nome AS operador_nome
-    FROM chamado c
-    LEFT JOIN operadores o ON c.operador_id = o.id
-    WHERE c.cliente_id = :id
-    ORDER BY c.data_criacao DESC");
-$stmt->bindParam(":id", $cliente_id);
-$stmt->execute();
-$chamados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// ================== CONTADORES ==================
 
-// CONTADORES
+$sqlCards = "
+SELECT status, COUNT(*) as total
+FROM chamado
+WHERE cliente_id = :id
+GROUP BY status
+";
+
+$stmtCards = $pdo->prepare($sqlCards);
+$stmtCards->bindParam(":id", $cliente_id);
+$stmtCards->execute();
+
+$cards = $stmtCards->fetchAll(PDO::FETCH_ASSOC);
+
+
+// valores padrão
 $abertos = 0;
 $andamento = 0;
 $finalizados = 0;
 
-foreach ($chamados as $c) {
-    if ($c["status"] == "Aberto") $abertos++;
-    if ($c["status"] == "Em andamento") $andamento++;
-    if ($c["status"] == "Finalizado") $finalizados++;
+
+// monta contadores
+foreach ($cards as $card) {
+
+    if ($card["status"] == "Aberto") {
+        $abertos = $card["total"];
+    }
+
+    if ($card["status"] == "Em andamento") {
+        $andamento = $card["total"];
+    }
+
+    if ($card["status"] == "Finalizado") {
+        $finalizados = $card["total"];
+    }
 }
+
+// ================== FILTRO ==================
+
+$statusFiltro = $_GET["status"] ?? "";
+
+// status permitidos
+$statusPermitidos = [
+    "Aberto",
+    "Em andamento",
+    "Finalizado"
+];
+
+// validação
+if (!in_array($statusFiltro, $statusPermitidos)) {
+    $statusFiltro = "";
+}
+
+// ================== BUSCAR CHAMADOS ==================
+$stmt = $pdo->prepare("SELECT c.*, o.nome AS operador_nome
+    FROM chamado c
+    LEFT JOIN operadores o ON c.operador_id = o.id
+    WHERE c.cliente_id = :id AND (:status = '' OR c.status = :status)
+    ORDER BY c.data_criacao DESC");
+$stmt->bindParam(":id", $cliente_id);
+$stmt->bindParam(":status", $statusFiltro);
+$stmt->execute();
+$chamados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ================== CRIAR CHAMADO ==================
 if (isset($_POST["nova_os"])) {
@@ -64,9 +108,16 @@ if (isset($_POST["nova_os"])) {
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Chamados</title>
 
-    <style>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -79,23 +130,77 @@ if (isset($_POST["nova_os"])) {
             color: #1e293b;
         }
 
+        html,
+        body {
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 999px;
+        }
+
+        .card,
+        .chamado,
+        .detail-card {
+
+            transition:
+                transform .25s ease,
+                box-shadow .25s ease,
+                border-color .25s ease;
+        }
+
+        h1,
+        h2,
+        h3,
+        p,
+        span,
+        div {
+
+            overflow-wrap: break-word;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            background: #1e3c72;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
         /* HEADER MESMO PADRÃO LOGIN */
         .header {
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
 
-            padding: 28px 35px;
+            padding: 20px clamp(16px, 4vw, 35px);
 
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
 
             box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
         }
 
         .header h1 {
-            font-size: 30px;
+            font-size: clamp(22px, 5vw, 34px);
             font-weight: 700;
+            line-height: 1.2;
         }
 
         .user {
@@ -121,17 +226,23 @@ if (isset($_POST["nova_os"])) {
 
         /* CONTAINER */
         .container {
-            max-width: 1200px;
-            margin: auto;
-            padding: 38px 22px 120px;
+            width: 100%;
+            max-width: 1600px;
+
+            margin-inline: auto;
+
+            padding:
+                clamp(16px, 3vw, 32px) clamp(14px, 3vw, 24px) 120px;
         }
 
 
         /* RESUMO */
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 22px;
+            grid-template-columns:
+                repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+
+            gap: clamp(14px, 2vw, 24px);
             margin-bottom: 34px;
         }
 
@@ -159,8 +270,10 @@ if (isset($_POST["nova_os"])) {
         /* LISTA */
         .lista {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns:
+                repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+
+            gap: 22px;
         }
 
 
@@ -271,17 +384,23 @@ if (isset($_POST["nova_os"])) {
             position: fixed;
 
             left: 50%;
-            bottom: 22px;
+            bottom: max(20px, env(safe-area-inset-bottom));
 
             transform: translateX(-50%);
+
+            width: min(92%, 420px);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             background: linear-gradient(135deg, #2a5298, #1e3c72);
             color: white;
 
-            padding: 15px 30px;
+            padding: 16px 24px;
 
             border: none;
-            border-radius: 999px;
+            border-radius: 18px;
 
             font-size: 16px;
             font-weight: 600;
@@ -309,12 +428,18 @@ if (isset($_POST["nova_os"])) {
             position: fixed;
             inset: 0;
 
+            padding: 20px;
+
             display: none;
             justify-content: center;
             align-items: center;
 
+            overflow-y: auto;
+
             background: rgba(15, 23, 42, .45);
             backdrop-filter: blur(4px);
+
+            z-index: 9999;
         }
 
         .modal.active {
@@ -323,17 +448,19 @@ if (isset($_POST["nova_os"])) {
 
         .modal-content {
             background: white;
-
-            width: 100%;
-            max-width: 440px;
-
-            padding: 35px;
-
-            border-radius: 18px;
-
             box-shadow: 0 18px 45px rgba(0, 0, 0, .15);
 
-            animation: fadeIn .22s ease;
+            width: min(100%, 900px);
+            padding: 35px;
+            border-radius: 18px;
+
+            max-height: calc(100vh - 40px);
+
+            overflow-y: auto;
+
+            border-radius: 24px;
+
+            animation: modalShow .25s ease;
         }
 
         .modal-content h2 {
@@ -377,9 +504,8 @@ if (isset($_POST["nova_os"])) {
         }
 
 
-        .modal-content button {
+        .btn-submit {
             width: 100%;
-
             padding: 14px;
 
             border: none;
@@ -395,11 +521,10 @@ if (isset($_POST["nova_os"])) {
             transition: .25s;
         }
 
-        .modal-content button:hover {
+        .mbtn-submit:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(42, 82, 152, .20);
         }
-
 
         /* EMPTY STATE */
         .empty-state {
@@ -472,16 +597,396 @@ if (isset($_POST["nova_os"])) {
             color: #94a3b8;
             font-style: italic;
         }
-    </style>
+
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card {
+            cursor: pointer;
+            transition: .25s;
+            border: 2px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card.active {
+            border-color: #2a5298;
+            background: #eff6ff;
+        }
+
+        /* =========================================
+   MODAL DETALHES PROFISSIONAL
+    ========================================= */
+
+        .modal-chamado {
+
+            width: min(100%, 900px);
+            max-height: calc(100vh - 40px);
+
+            padding: 0 !important;
+
+            overflow-y: auto;
+
+            border-radius: 24px;
+
+            background: #fff;
+
+            box-shadow:
+                0 25px 60px rgba(15, 23, 42, .18);
+
+            animation: modalShow .25s ease;
+        }
+
+
+        /* HEADER */
+
+        .modal-chamado-header {
+
+            padding: 28px 32px;
+
+            background:
+                linear-gradient(135deg,
+                    rgba(30, 60, 114, 1),
+                    rgba(42, 82, 152, 1));
+
+            color: white;
+
+            position: relative;
+        }
+
+        .modal-header-top {
+
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            gap: 20px;
+        }
+
+
+        .modal-mini-label {
+
+            font-size: 13px;
+            opacity: .75;
+
+            margin-bottom: 6px;
+
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .modal-chamado-header h2 {
+
+            font-size: 30px;
+            font-weight: 700;
+            color: white;
+
+            line-height: 1.2;
+
+            margin: 0;
+        }
+
+
+        /* BOTÃO FECHAR */
+
+        .close-btn {
+            background: transparent;
+            float: right;
+            border: none;
+            color: white;
+
+            font-size: 18px;
+
+            cursor: pointer;
+
+        }
+
+
+        /* BADGES */
+
+        .modal-badges {
+
+            flex-wrap: wrap;
+            gap: 12px;
+
+            margin-top: 22px;
+        }
+
+        .badge-soft {
+
+            float: right;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 10px 14px;
+
+            border-radius: 999px;
+
+            background: rgba(255, 255, 255, .12);
+
+            font-size: 13px;
+
+            backdrop-filter: blur(10px);
+        }
+
+
+        /* BODY */
+
+        .modal-chamado-body {
+
+            padding: 30px;
+        }
+
+
+        /* GRID */
+
+        .detalhes-grid {
+
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+            gap: 18px;
+
+            margin-bottom: 28px;
+        }
+
+
+        /* CARDS */
+
+        .detail-card {
+
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+
+            padding: 20px;
+
+            border-radius: 18px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e2e8f0;
+
+            transition: .25s;
+        }
+
+        .detail-card:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 25px rgba(15, 23, 42, .06);
+        }
+
+        .detail-icon {
+
+            width: 44px;
+            height: 44px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background: #e0e7ff;
+
+            font-size: 20px;
+
+            flex-shrink: 0;
+        }
+
+        .detail-label {
+
+            font-size: 13px;
+            color: #64748b;
+
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+
+            font-size: 16px;
+            font-weight: 600;
+
+            color: #0f172a;
+        }
+
+
+        /* SECTIONS */
+
+        .section-box {
+
+            margin-top: 24px;
+
+            padding: 24px;
+
+            border-radius: 20px;
+
+            background: #fff;
+
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+
+            font-size: 16px;
+            font-weight: 700;
+
+            color: #0f172a;
+
+            margin-bottom: 18px;
+        }
+
+
+        /* DESCRIÇÃO */
+
+        .descricao-box {
+
+            line-height: 1.8;
+
+            color: #475569;
+
+            white-space: pre-line;
+
+            font-size: 15px;
+        }
+
+
+        /* TIMELINE */
+
+        .timeline {
+
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .timeline-item {
+
+            display: flex;
+            gap: 14px;
+        }
+
+        .timeline-dot {
+
+            width: 14px;
+            height: 14px;
+
+            border-radius: 50%;
+
+            margin-top: 5px;
+
+            background: #22c55e;
+
+            flex-shrink: 0;
+        }
+
+        .timeline-dot.warning {
+
+            background: #f59e0b;
+        }
+
+        .timeline-content {
+
+            color: #334155;
+
+            line-height: 1.6;
+        }
+
+
+        /* STATUS MODAL */
+
+        #detStatus {
+
+            padding: 10px 16px;
+
+            border-radius: 999px;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        /* RESPONSIVO */
+
+        @media(max-width:768px) {
+
+            .modal-chamado {
+
+                width: calc(100% - 20px);
+                max-height: 90vh;
+
+                overflow-y: auto;
+            }
+
+            .modal-chamado-header {
+
+                padding: 24px;
+            }
+
+            .modal-chamado-body {
+
+                padding: 22px;
+            }
+
+            .modal-chamado-header h2 {
+
+                font-size: 24px;
+            }
+
+            .modal-header-top {
+
+                align-items: flex-start;
+            }
+        }
+
+
+        /* ANIMAÇÃO */
+
+        @keyframes modalShow {
+
+            from {
+
+                opacity: 0;
+                transform: translateY(10px) scale(.98);
+            }
+
+            to {
+
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+</style>
 
 </head>
 
 <body>
 
     <div class="header">
-        <h1>📋 Meus Chamados</h1>
+        <h1><i class="bi bi-inboxes-fill"></i> Minhas Ordens</h1>
         <div class="user">
-            👤 <?php echo $_SESSION["cliente"]; ?> |
+            <?php
+            $nome = $_SESSION["cliente"];
+            $primeiraLetra = strtoupper(substr($nome, 0, 1));
+
+            if ($nome === "Kauê Gabriel Magarinos") {
+                $primeiraLetra = "🧑‍💻";
+            }
+            ?>
+
+            <div class="avatar"><?php echo $primeiraLetra; ?></div>
+            <?php echo htmlspecialchars($nome); ?> |
             <a href="logout.php">Sair</a>
         </div>
     </div>
@@ -494,20 +999,38 @@ if (isset($_POST["nova_os"])) {
 
         <!-- RESUMO -->
         <div class="cards">
-            <div class="card">
-                <h3>Abertos</h3>
-                <p><?php echo $abertos; ?></p>
-            </div>
+            <a href="<?php echo $statusFiltro == 'Aberto' ? '?' : '?status=Aberto'; ?>" class="card-link">
 
-            <div class="card">
-                <h3>Em andamento</h3>
-                <p><?php echo $andamento; ?></p>
-            </div>
+                <div class="card <?php echo $statusFiltro == 'Aberto' ? 'active' : ''; ?>">
 
-            <div class="card">
-                <h3>Finalizados</h3>
-                <p><?php echo $finalizados; ?></p>
-            </div>
+                    <h3>Abertos</h3>
+                    <p><?php echo $abertos; ?></p>
+
+                </div>
+
+            </a>
+
+            <a href="<?php echo $statusFiltro == 'Em andamento' ? '?' : '?status=Em%20andamento'; ?>" class="card-link">
+
+                <div class="card <?php echo $statusFiltro == 'Em andamento' ? 'active' : ''; ?>">
+
+                    <h3>Em andamento</h3>
+                    <p><?php echo $andamento; ?></p>
+
+                </div>
+
+            </a>
+
+            <a href="<?php echo $statusFiltro == 'Finalizado' ? '?' : '?status=Finalizado'; ?>" class="card-link">
+
+                <div class="card <?php echo $statusFiltro == 'Finalizado' ? 'active' : ''; ?>">
+
+                    <h3>Finalizados</h3>
+                    <p><?php echo $finalizados; ?></p>
+
+                </div>
+
+            </a>
         </div>
 
         <!-- LISTA -->
@@ -526,7 +1049,21 @@ if (isset($_POST["nova_os"])) {
                     $classe = $mapa[$c["status"]] ?? "";
                     ?>
 
-                    <div class="chamado status-<?php echo $classe; ?>">
+                    <div
+                        class="chamado status-<?php echo $classe; ?>"
+
+                        onclick='abrirDetalhes(
+
+        "<?php echo htmlspecialchars($c["titulo"], ENT_QUOTES); ?>",
+
+        "<?php echo htmlspecialchars($c["descricao"], ENT_QUOTES); ?>",
+
+        "<?php echo htmlspecialchars($c["status"], ENT_QUOTES); ?>",
+
+        "<?php echo htmlspecialchars($c["operador_nome"] ?? "Não atribuído", ENT_QUOTES); ?>",
+
+        "<?php echo date("d/m/Y H:i", strtotime($c["data_criacao"])); ?>"
+    )'>
                         <h3><?php echo htmlspecialchars($c["titulo"]); ?></h3>
 
                         <p>
@@ -583,9 +1120,143 @@ if (isset($_POST["nova_os"])) {
                 <input type="text" name="titulo" placeholder="Título" required>
                 <textarea name="descricao" placeholder="Descrição" required></textarea>
 
-                <button type="submit">Enviar</button>
+                <button type="submit" class="btn-submit">Enviar</button>
             </form>
         </div>
+    </div>
+
+    <!-- MODAL DETALHES -->
+    <div class="modal" id="modalDetalhes">
+
+        <div class="modal-content modal-chamado">
+
+            <!-- HEADER -->
+            <div class="modal-chamado-header">
+
+                <div class="modal-header-top">
+
+                    <div>
+                        <div class="modal-mini-label">
+                            Ordem do Serviço
+                        </div>
+
+                        <h2 id="detTitulo">
+                            Carregando...
+                        </h2>
+                    </div>
+
+                    <button class="close-btn" onclick="fecharDetalhes()">
+                        ✕
+                    </button>
+
+                </div>
+
+                <div class="modal-badges">
+
+                    <span class="status" id="detStatus">
+                        <!-- Status -->
+                    </span>
+
+                    <span class="badge-soft">
+                        <i class="bi bi-calendar3"></i>
+                        <span id="detData"></span>
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-chamado-body">
+
+                <!-- GRID -->
+                <div class="detalhes-grid">
+
+                    <!-- OPERADOR -->
+                    <div class="detail-card">
+
+                        <div class="detail-icon">
+                            👨‍🔧
+                        </div>
+
+                        <div>
+                            <div class="detail-label">
+                                Técnico responsável
+                            </div>
+
+                            <div class="detail-value" id="detOperador">
+                                Não atribuído
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="detail-card">
+
+                        <div class="detail-icon">
+                            📌
+                        </div>
+
+                        <div>
+                            <div class="detail-label">
+                                Situação atual
+                            </div>
+
+                            <div class="detail-value" id="detStatusValue">
+                                Em acompanhamento
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DESCRIÇÃO -->
+                <div class="section-box">
+
+                    <div class="section-title">
+                        📝 Descrição do chamado
+                    </div>
+
+                    <div class="descricao-box" id="detDescricao"></div>
+
+                </div>
+
+                <!-- TIMELINE -->
+                <!-- <div class="section-box">
+
+                <div class="section-title">
+                    📅 Histórico
+                </div>
+
+                <div class="timeline">
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+
+                        <div class="timeline-content">
+                            <strong>Chamado criado</strong>
+                            <span id="detData"></span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-dot warning"></div>
+
+                        <div class="timeline-content">
+                            Aguardando atualização do operador
+                        </div>
+                    </div>
+
+                </div>
+
+            </div> -->
+
+            </div>
+
+        </div>
+
     </div>
 
     <script>
@@ -609,6 +1280,67 @@ if (isset($_POST["nova_os"])) {
 
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") fecharModal();
+        });
+
+        function abrirDetalhes(
+            titulo,
+            descricao,
+            status,
+            operador,
+            data
+        ) {
+
+            document.getElementById("detTitulo").innerText = titulo;
+
+            document.getElementById("detDescricao").innerText = descricao;
+
+            // const statusEl = document.getElementById("detStatus");
+
+            // statusEl.innerText = status;
+
+            // statusEl.className = "status";
+
+            // if (status === "Aberto") {
+            //     statusEl.classList.add("aberto");
+            // }
+
+            // if (status === "Em andamento") {
+            //     statusEl.classList.add("andamento");
+            // }
+
+            // if (status === "Finalizado") {
+            //     statusEl.classList.add("finalizado");
+            // }
+
+            document.getElementById("detOperador").innerText = operador;
+
+            document.getElementById("detStatusValue").innerText = status || "Aguardando atualização";
+
+            document.getElementById("detData").innerText = data;
+
+            document.getElementById("modalDetalhes")
+                .classList.add("active");
+
+            document.body.style.overflow = "hidden";
+        }
+
+        function fecharDetalhes() {
+
+            document.getElementById("modalDetalhes")
+                .classList.remove("active");
+
+            document.body.style.overflow = "auto";
+        }
+
+        window.onclick = function(e) {
+            const modal = document.getElementById("modalDetalhes");
+            if (e.target === modal) {
+                fecharDetalhes();
+            }
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") fecharDetalhes();
         });
     </script>
 

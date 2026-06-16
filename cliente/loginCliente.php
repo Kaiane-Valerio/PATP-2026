@@ -38,6 +38,7 @@ if ($_POST) {
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acesso do Cliente</title>
 
     <style>
@@ -47,172 +48,383 @@ if ($_POST) {
             box-sizing: border-box;
         }
 
-        body {
-            font-family: "Segoe UI", sans-serif;
-            height: 100vh;
-            display: flex;
-            background: #eef2f7;
+        :root {
+
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+
+            --bg: #eef2f7;
+            --card: #ffffff;
+
+            --text: #0f172a;
+            --text-light: #64748b;
+
+            --border: #dbe2ea;
+
+            --shadow:
+                0 10px 30px rgba(0, 0, 0, 0.08);
+
+            --radius: 22px;
         }
 
-        /* LADO ESQUERDO */
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+
+            font-family: "Segoe UI", sans-serif;
+
+            background:
+                linear-gradient(to bottom right, #eef2f7, #f8fafc);
+
+            min-height: 100dvh;
+
+            display: flex;
+
+            overflow-x: hidden;
+        }
+
+        /* =========================
+   LEFT
+========================= */
+
         .left {
-            width: 55%;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
+
+            flex: 1;
+
+            background:
+                linear-gradient(135deg,
+                    #1e3c72,
+                    #2563eb);
+
             color: white;
 
             display: flex;
             flex-direction: column;
             justify-content: center;
 
-            padding: 70px;
+            padding:
+                clamp(30px, 6vw, 90px);
+
+            position: relative;
+
+            overflow: hidden;
         }
 
         .left h1 {
-            font-size: 46px;
-            margin-bottom: 18px;
+
+            font-size:
+                clamp(2.2rem, 5vw, 4.2rem);
+
             line-height: 1.1;
+
+            margin-bottom: 20px;
+
+            font-weight: 700;
+
+            position: relative;
+            z-index: 2;
         }
 
         .left p {
-            font-size: 19px;
+
+            max-width: 550px;
+
+            font-size:
+                clamp(1rem, 2vw, 1.2rem);
+
+            line-height: 1.7;
+
             opacity: .95;
-            max-width: 500px;
-            line-height: 1.5;
+
+            position: relative;
+            z-index: 2;
         }
 
-        /* LADO DIREITO */
+        /* =========================
+   RIGHT
+========================= */
+
         .right {
-            width: 45%;
+
+            flex: 1;
+
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 30px;
+
+            padding:
+                clamp(20px, 5vw, 60px);
         }
 
+        /* =========================
+   CARD LOGIN
+========================= */
+
         .box {
-            background: white;
-            width: 390px;
 
-            padding: 45px;
-            border-radius: 18px;
+            width: 100%;
+            max-width: 430px;
 
-            box-shadow: 0 12px 35px rgba(0, 0, 0, .08);
+            background: var(--card);
+
+            border-radius: var(--radius);
+
+            padding:
+                clamp(25px, 4vw, 50px);
+
+            box-shadow: var(--shadow);
+
+            border: 1px solid rgba(255, 255, 255, .7);
+
+            backdrop-filter: blur(10px);
+
+            animation: fadeUp .5s ease;
+        }
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .box h2 {
-            font-size: 30px;
+
+            color: var(--text);
+
+            font-size:
+                clamp(1.8rem, 3vw, 2.2rem);
+
             margin-bottom: 10px;
-            color: #1e293b;
         }
 
         .sub {
-            color: #64748b;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 28px;
+
+            color: var(--text-light);
+
+            line-height: 1.6;
+
+            margin-bottom: 30px;
         }
+
+        /* =========================
+   ERRO
+========================= */
 
         .erro {
-            background: #ffe5e5;
+
+            background: #fee2e2;
+
             color: #b91c1c;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            font-size: 14px;
+
+            padding: 14px;
+
+            border-radius: 12px;
+
+            margin-bottom: 18px;
+
+            font-size: .95rem;
+
+            border: 1px solid #fecaca;
         }
 
-        input {
-            width: 100%;
-            padding: 14px 15px;
-            margin-bottom: 14px;
+        /* =========================
+   INPUTS
+========================= */
 
-            border: 1px solid #d6dbe3;
-            border-radius: 10px;
+        input {
+
+            width: 100%;
+
+            height: 54px;
+
+            padding: 0 16px;
+
+            border-radius: 14px;
+
+            border: 1px solid var(--border);
+
+            background: #fff;
 
             font-size: 15px;
+
+            transition: .25s ease;
+
+            margin-bottom: 16px;
         }
 
         input:focus {
+
             outline: none;
-            border-color: #2a5298;
-            box-shadow: 0 0 0 3px rgba(42, 82, 152, .12);
+
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 4px rgba(37, 99, 235, .12);
         }
 
-        button {
-            width: 100%;
-            padding: 14px;
-
-            border: none;
-            border-radius: 10px;
-
-            background: #2a5298;
-            color: white;
-
-            font-weight: 600;
-            font-size: 16px;
-
-            cursor: pointer;
-            transition: .25s;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(42, 82, 152, .25);
-        }
-
-        .link {
-            text-align: center;
-            margin-top: 18px;
-            font-size: 14px;
-        }
-
-        .link a {
-            text-decoration: none;
-            font-weight: 600;
-            color: #2a5298;
-        }
-
-        .link a:hover {
-            text-decoration: underline;
-        }
-
-        @media(max-width:900px) {
-
-            body {
-                flex-direction: column;
-            }
-
-            .left,
-            .right {
-                width: 100%;
-            }
-
-            .left {
-                padding: 40px 30px;
-                min-height: 35vh;
-            }
-
-            .box {
-                width: 100%;
-                max-width: 420px;
-            }
-
-        }
+        /* =========================
+   SENHA
+========================= */
 
         .senha-box {
+
             position: relative;
         }
 
         .senha-box input {
-            width: 100%;
-            padding-right: 40px;
+
+            padding-right: 50px;
         }
 
         .toggle {
+
             position: absolute;
-            right: 10px;
-            top: 10px;
+
+            right: 16px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
             cursor: pointer;
+
+            font-size: 18px;
+
+            user-select: none;
+        }
+
+        /* =========================
+   BOTÃO
+========================= */
+
+        button {
+
+            width: 100%;
+
+            min-height: 54px;
+
+            border: none;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(to right,
+                    var(--primary),
+                    var(--primary-dark));
+
+            color: white;
+
+            font-size: 1rem;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                .25s ease;
+        }
+
+        button:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 25px rgba(37, 99, 235, .25);
+        }
+
+        button:active {
+
+            transform: scale(.98);
+        }
+
+        /* =========================
+   LINKS
+========================= */
+
+        .link {
+
+            margin-top: 24px;
+
+            text-align: center;
+
+            color: var(--text-light);
+
+            font-size: .95rem;
+        }
+
+        .link a {
+
+            color: var(--primary);
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+        .link a:hover {
+
+            text-decoration: underline;
+        }
+
+        /* =========================
+   RESPONSIVIDADE
+========================= */
+
+        /* TABLETS */
+
+        @media (max-width: 992px) {
+
+            body {
+
+                flex-direction: column;
+            }
+
+            .left {
+
+                min-height: 35vh;
+            }
+
+            .right {
+
+                padding-top: 0;
+            }
+        }
+
+        /* CELULARES */
+
+        @media (max-width: 576px) {
+
+            .left {
+
+                min-height: auto;
+
+                text-align: center;
+
+                align-items: center;
+            }
+
+            .left p {
+
+                max-width: 100%;
+            }
+
+            .box {
+
+                border-radius: 20px;
+            }
+
+            body {
+
+                overflow-y: auto;
+            }
         }
     </style>
 
