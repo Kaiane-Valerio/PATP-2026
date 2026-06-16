@@ -620,7 +620,11 @@ if (isset($_POST["nova_os"])) {
 
         /* =========================================
    MODAL DETALHES PROFISSIONAL
+<<<<<<< HEAD
     ========================================= */
+=======
+========================================= */
+>>>>>>> da228d41efa42825cc9374bfea1e35208c4d1bbe
 
         .modal-chamado {
 
@@ -967,14 +971,22 @@ if (isset($_POST["nova_os"])) {
                 transform: translateY(0) scale(1);
             }
         }
+<<<<<<< HEAD
 </style>
+=======
+    </style>
+>>>>>>> da228d41efa42825cc9374bfea1e35208c4d1bbe
 
 </head>
 
 <body>
 
     <div class="header">
+<<<<<<< HEAD
         <h1><i class="bi bi-inboxes-fill"></i> Minhas Ordens</h1>
+=======
+        <h1>📋 Minhas Ordens</h1>
+>>>>>>> da228d41efa42825cc9374bfea1e35208c4d1bbe
         <div class="user">
             <?php
             $nome = $_SESSION["cliente"];
