@@ -299,7 +299,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["salvar_perfil"])) {
                     <label for="senha">Nova Senha <span class="text-muted" style="font-weight: normal; font-size: 12px;"></span></label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" id="senha" name="senha" class="form-control" placeholder="Digite uma nova senha se quiser mudar">
+                        <input type="password" id="senha" name="senha" class="form-control" placeholder="Digite uma nova senha">
                     </div>
                 </div>
 

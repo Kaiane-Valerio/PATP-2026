@@ -111,13 +111,10 @@ if (isset($_POST["nova_os"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Chamados</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
-<style>
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -151,7 +148,6 @@ if (isset($_POST["nova_os"])) {
         .card,
         .chamado,
         .detail-card {
-
             transition:
                 transform .25s ease,
                 box-shadow .25s ease,
@@ -164,7 +160,6 @@ if (isset($_POST["nova_os"])) {
         p,
         span,
         div {
-
             overflow-wrap: break-word;
         }
 
@@ -179,21 +174,19 @@ if (isset($_POST["nova_os"])) {
             justify-content: center;
             font-weight: bold;
             font-size: 18px;
+            transition: transform 0.2s ease;
         }
 
         /* HEADER MESMO PADRÃO LOGIN */
         .header {
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
-
             padding: 20px clamp(16px, 4vw, 35px);
-
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 16px;
-
             box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
         }
 
@@ -210,7 +203,26 @@ if (isset($_POST["nova_os"])) {
             font-size: 14px;
         }
 
-        .user a {
+        /* Estilização do link de perfil do cliente */
+        .profile-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .profile-link:hover {
+            opacity: 0.85;
+        }
+
+        .profile-link:hover .avatar {
+            transform: scale(1.05);
+        }
+
+        .user a.btn-sair {
             text-decoration: none;
             color: white;
             padding: 8px 14px;
@@ -219,7 +231,7 @@ if (isset($_POST["nova_os"])) {
             transition: .25s;
         }
 
-        .user a:hover {
+        .user a.btn-sair:hover {
             background: rgba(255, 255, 255, .22);
         }
 
@@ -228,20 +240,15 @@ if (isset($_POST["nova_os"])) {
         .container {
             width: 100%;
             max-width: 1600px;
-
             margin-inline: auto;
-
-            padding:
-                clamp(16px, 3vw, 32px) clamp(14px, 3vw, 24px) 120px;
+            padding: clamp(16px, 3vw, 32px) clamp(14px, 3vw, 24px) 120px;
         }
 
 
         /* RESUMO */
         .cards {
             display: grid;
-            grid-template-columns:
-                repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
             gap: clamp(14px, 2vw, 24px);
             margin-bottom: 34px;
         }
@@ -250,7 +257,6 @@ if (isset($_POST["nova_os"])) {
             background: #fff;
             padding: 26px;
             border-radius: 18px;
-
             box-shadow: 0 12px 30px rgba(0, 0, 0, .06);
         }
 
@@ -270,9 +276,7 @@ if (isset($_POST["nova_os"])) {
         /* LISTA */
         .lista {
             display: grid;
-            grid-template-columns:
-                repeat(auto-fit, minmax(min(100%, 340px), 1fr));
-
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
             gap: 22px;
         }
 
@@ -280,13 +284,10 @@ if (isset($_POST["nova_os"])) {
         /* CHAMADO CARD */
         .chamado {
             position: relative;
-
             background: #fff;
             padding: 24px;
             border-radius: 18px;
-
             box-shadow: 0 12px 30px rgba(0, 0, 0, .06);
-
             transition: .25s;
             cursor: pointer;
         }
@@ -319,7 +320,6 @@ if (isset($_POST["nova_os"])) {
             color: #475569;
             line-height: 1.5;
             margin-bottom: 18px;
-
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -343,14 +343,10 @@ if (isset($_POST["nova_os"])) {
         /* STATUS CHIPS */
         .status {
             display: inline-block;
-
             padding: 7px 12px;
-
             border-radius: 999px;
-
             font-size: 12px;
             font-weight: 600;
-
             margin-bottom: 12px;
         }
 
@@ -378,39 +374,26 @@ if (isset($_POST["nova_os"])) {
         }
 
 
-
         /* BOTÃO PADRÃO LOGIN */
         .bottom-btn {
             position: fixed;
-
             left: 50%;
             bottom: max(20px, env(safe-area-inset-bottom));
-
             transform: translateX(-50%);
-
             width: min(92%, 420px);
-
             display: flex;
             justify-content: center;
             align-items: center;
-
             background: linear-gradient(135deg, #2a5298, #1e3c72);
             color: white;
-
             padding: 16px 24px;
-
             border: none;
             border-radius: 18px;
-
             font-size: 16px;
             font-weight: 600;
-
             cursor: pointer;
-
             box-shadow: 0 12px 30px rgba(42, 82, 152, .30);
-
             transition: .25s;
-
             z-index: 999;
         }
 
@@ -427,18 +410,13 @@ if (isset($_POST["nova_os"])) {
         .modal {
             position: fixed;
             inset: 0;
-
             padding: 20px;
-
             display: none;
             justify-content: center;
             align-items: center;
-
             overflow-y: auto;
-
             background: rgba(15, 23, 42, .45);
             backdrop-filter: blur(4px);
-
             z-index: 9999;
         }
 
@@ -449,17 +427,12 @@ if (isset($_POST["nova_os"])) {
         .modal-content {
             background: white;
             box-shadow: 0 18px 45px rgba(0, 0, 0, .15);
-
             width: min(100%, 900px);
             padding: 35px;
             border-radius: 18px;
-
             max-height: calc(100vh - 40px);
-
             overflow-y: auto;
-
             border-radius: 24px;
-
             animation: modalShow .25s ease;
         }
 
@@ -481,13 +454,10 @@ if (isset($_POST["nova_os"])) {
         .modal-content input,
         .modal-content textarea {
             width: 100%;
-
             padding: 14px;
             margin-bottom: 14px;
-
             border: 1px solid #d6dbe3;
             border-radius: 10px;
-
             font-size: 15px;
         }
 
@@ -507,16 +477,12 @@ if (isset($_POST["nova_os"])) {
         .btn-submit {
             width: 100%;
             padding: 14px;
-
             border: none;
             border-radius: 10px;
-
             background: #2a5298;
             color: white;
-
             font-weight: 600;
             font-size: 16px;
-
             cursor: pointer;
             transition: .25s;
         }
@@ -529,10 +495,8 @@ if (isset($_POST["nova_os"])) {
         /* EMPTY STATE */
         .empty-state {
             background: #fff;
-
             padding: 50px 30px;
             text-align: center;
-
             border-radius: 18px;
             box-shadow: 0 12px 30px rgba(0, 0, 0, .06);
         }
@@ -543,13 +507,10 @@ if (isset($_POST["nova_os"])) {
 
         .btn-empty {
             margin-top: 18px;
-
             background: #2a5298;
             color: white;
-
             border: none;
             border-radius: 10px;
-
             padding: 14px 20px;
             cursor: pointer;
         }
@@ -560,7 +521,6 @@ if (isset($_POST["nova_os"])) {
                 opacity: 0;
                 transform: scale(.94);
             }
-
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -569,7 +529,6 @@ if (isset($_POST["nova_os"])) {
 
 
         @media(max-width:768px) {
-
             .header {
                 padding: 22px;
                 flex-direction: column;
@@ -584,7 +543,6 @@ if (isset($_POST["nova_os"])) {
             .lista {
                 gap: 18px;
             }
-
         }
 
         .operador {
@@ -619,374 +577,253 @@ if (isset($_POST["nova_os"])) {
         }
 
         /* =========================================
-   MODAL DETALHES PROFISSIONAL
-<<<<<<< HEAD
-    ========================================= */
-=======
-========================================= */
->>>>>>> da228d41efa42825cc9374bfea1e35208c4d1bbe
+           MODAL DETALHES PROFISSIONAL
+        ========================================= */
 
         .modal-chamado {
-
             width: min(100%, 900px);
             max-height: calc(100vh - 40px);
-
             padding: 0 !important;
-
             overflow-y: auto;
-
             border-radius: 24px;
-
             background: #fff;
-
-            box-shadow:
-                0 25px 60px rgba(15, 23, 42, .18);
-
+            box-shadow: 0 25px 60px rgba(15, 23, 42, .18);
             animation: modalShow .25s ease;
         }
 
 
         /* HEADER */
-
         .modal-chamado-header {
-
             padding: 28px 32px;
-
-            background:
-                linear-gradient(135deg,
-                    rgba(30, 60, 114, 1),
-                    rgba(42, 82, 152, 1));
-
+            background: linear-gradient(135deg, rgba(30, 60, 114, 1), rgba(42, 82, 152, 1));
             color: white;
-
             position: relative;
         }
 
         .modal-header-top {
-
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-
             gap: 20px;
         }
 
-
         .modal-mini-label {
-
             font-size: 13px;
             opacity: .75;
-
             margin-bottom: 6px;
-
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .modal-chamado-header h2 {
-
             font-size: 30px;
             font-weight: 700;
             color: white;
-
             line-height: 1.2;
-
             margin: 0;
         }
 
 
         /* BOTÃO FECHAR */
-
         .close-btn {
             background: transparent;
             float: right;
             border: none;
             color: white;
-
             font-size: 18px;
-
             cursor: pointer;
-
         }
 
 
         /* BADGES */
-
         .modal-badges {
-
             flex-wrap: wrap;
             gap: 12px;
-
             margin-top: 22px;
         }
 
         .badge-soft {
-
             float: right;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-
             padding: 10px 14px;
-
             border-radius: 999px;
-
             background: rgba(255, 255, 255, .12);
-
             font-size: 13px;
-
             backdrop-filter: blur(10px);
         }
 
 
         /* BODY */
-
         .modal-chamado-body {
-
             padding: 30px;
         }
 
 
         /* GRID */
-
         .detalhes-grid {
-
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-
             gap: 18px;
-
             margin-bottom: 28px;
         }
 
 
         /* CARDS */
-
         .detail-card {
-
             display: flex;
             align-items: flex-start;
             gap: 14px;
-
             padding: 20px;
-
             border-radius: 18px;
-
             background: #f8fafc;
-
             border: 1px solid #e2e8f0;
-
             transition: .25s;
         }
 
         .detail-card:hover {
-
             transform: translateY(-2px);
-
-            box-shadow:
-                0 10px 25px rgba(15, 23, 42, .06);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, .06);
         }
 
         .detail-icon {
-
             width: 44px;
             height: 44px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             border-radius: 14px;
-
             background: #e0e7ff;
-
             font-size: 20px;
-
             flex-shrink: 0;
         }
 
         .detail-label {
-
             font-size: 13px;
             color: #64748b;
-
             margin-bottom: 6px;
         }
 
         .detail-value {
-
             font-size: 16px;
             font-weight: 600;
-
             color: #0f172a;
         }
 
 
         /* SECTIONS */
-
         .section-box {
-
             margin-top: 24px;
-
             padding: 24px;
-
             border-radius: 20px;
-
             background: #fff;
-
             border: 1px solid #e2e8f0;
         }
 
         .section-title {
-
             font-size: 16px;
             font-weight: 700;
-
             color: #0f172a;
-
             margin-bottom: 18px;
         }
 
 
         /* DESCRIÇÃO */
-
         .descricao-box {
-
             line-height: 1.8;
-
             color: #475569;
-
             white-space: pre-line;
-
             font-size: 15px;
         }
 
 
         /* TIMELINE */
-
         .timeline {
-
             display: flex;
             flex-direction: column;
             gap: 18px;
         }
 
         .timeline-item {
-
             display: flex;
             gap: 14px;
         }
 
         .timeline-dot {
-
             width: 14px;
             height: 14px;
-
             border-radius: 50%;
-
             margin-top: 5px;
-
             background: #22c55e;
-
             flex-shrink: 0;
         }
 
         .timeline-dot.warning {
-
             background: #f59e0b;
         }
 
         .timeline-content {
-
             color: #334155;
-
             line-height: 1.6;
         }
 
 
         /* STATUS MODAL */
-
-        #detStatus {
-
-            padding: 10px 16px;
-
+        .modal-badges #detStatus {
+            padding: 7px 12px;
             border-radius: 999px;
-
-            font-size: 13px;
-            font-weight: 700;
-
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
         }
 
 
         /* RESPONSIVO */
-
         @media(max-width:768px) {
-
             .modal-chamado {
-
                 width: calc(100% - 20px);
                 max-height: 90vh;
-
                 overflow-y: auto;
             }
 
             .modal-chamado-header {
-
                 padding: 24px;
             }
 
             .modal-chamado-body {
-
                 padding: 22px;
             }
 
             .modal-chamado-header h2 {
-
                 font-size: 24px;
             }
 
             .modal-header-top {
-
                 align-items: flex-start;
             }
         }
 
 
         /* ANIMAÇÃO */
-
         @keyframes modalShow {
-
             from {
-
                 opacity: 0;
                 transform: translateY(10px) scale(.98);
             }
-
             to {
-
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
         }
-<<<<<<< HEAD
-</style>
-=======
     </style>
->>>>>>> da228d41efa42825cc9374bfea1e35208c4d1bbe
 
 </head>
 
 <body>
 
     <div class="header">
-<<<<<<< HEAD
         <h1><i class="bi bi-inboxes-fill"></i> Minhas Ordens</h1>
-=======
-        <h1>📋 Minhas Ordens</h1>
->>>>>>> da228d41efa42825cc9374bfea1e35208c4d1bbe
         <div class="user">
             <?php
             $nome = $_SESSION["cliente"];
@@ -997,9 +834,13 @@ if (isset($_POST["nova_os"])) {
             }
             ?>
 
-            <div class="avatar"><?php echo $primeiraLetra; ?></div>
-            <?php echo htmlspecialchars($nome); ?> |
-            <a href="logout.php">Sair</a>
+            <a href="editarPerfilCliente.php" class="profile-link" title="Editar meu perfil">
+                <div class="avatar"><?php echo $primeiraLetra; ?></div>
+                <span><?php echo htmlspecialchars($nome); ?></span>
+            </a>
+            
+            |
+            <a href="logout.php" class="btn-sair">Sair</a>
         </div>
     </div>
 
@@ -1009,43 +850,29 @@ if (isset($_POST["nova_os"])) {
             + Abrir chamado
         </button>
 
-        <!-- RESUMO -->
         <div class="cards">
             <a href="<?php echo $statusFiltro == 'Aberto' ? '?' : '?status=Aberto'; ?>" class="card-link">
-
                 <div class="card <?php echo $statusFiltro == 'Aberto' ? 'active' : ''; ?>">
-
                     <h3>Abertos</h3>
                     <p><?php echo $abertos; ?></p>
-
                 </div>
-
             </a>
 
             <a href="<?php echo $statusFiltro == 'Em andamento' ? '?' : '?status=Em%20andamento'; ?>" class="card-link">
-
                 <div class="card <?php echo $statusFiltro == 'Em andamento' ? 'active' : ''; ?>">
-
                     <h3>Em andamento</h3>
                     <p><?php echo $andamento; ?></p>
-
                 </div>
-
             </a>
 
             <a href="<?php echo $statusFiltro == 'Finalizado' ? '?' : '?status=Finalizado'; ?>" class="card-link">
-
                 <div class="card <?php echo $statusFiltro == 'Finalizado' ? 'active' : ''; ?>">
-
                     <h3>Finalizados</h3>
                     <p><?php echo $finalizados; ?></p>
-
                 </div>
-
             </a>
         </div>
 
-        <!-- LISTA -->
         <div class="lista">
 
             <?php if (count($chamados) > 0): ?>
@@ -1063,19 +890,13 @@ if (isset($_POST["nova_os"])) {
 
                     <div
                         class="chamado status-<?php echo $classe; ?>"
-
                         onclick='abrirDetalhes(
-
-        "<?php echo htmlspecialchars($c["titulo"], ENT_QUOTES); ?>",
-
-        "<?php echo htmlspecialchars($c["descricao"], ENT_QUOTES); ?>",
-
-        "<?php echo htmlspecialchars($c["status"], ENT_QUOTES); ?>",
-
-        "<?php echo htmlspecialchars($c["operador_nome"] ?? "Não atribuído", ENT_QUOTES); ?>",
-
-        "<?php echo date("d/m/Y H:i", strtotime($c["data_criacao"])); ?>"
-    )'>
+                            "<?php echo htmlspecialchars($c["titulo"], ENT_QUOTES); ?>",
+                            "<?php echo htmlspecialchars($c["descricao"], ENT_QUOTES); ?>",
+                            "<?php echo htmlspecialchars($c["status"], ENT_QUOTES); ?>",
+                            "<?php echo htmlspecialchars($c["operador_nome"] ?? "Não atribuído", ENT_QUOTES); ?>",
+                            "<?php echo date("d/m/Y H:i", strtotime($c["data_criacao"])); ?>"
+                        )'>
                         <h3><?php echo htmlspecialchars($c["titulo"]); ?></h3>
 
                         <p>
@@ -1137,138 +958,53 @@ if (isset($_POST["nova_os"])) {
         </div>
     </div>
 
-    <!-- MODAL DETALHES -->
     <div class="modal" id="modalDetalhes">
-
         <div class="modal-content modal-chamado">
 
-            <!-- HEADER -->
             <div class="modal-chamado-header">
-
                 <div class="modal-header-top">
-
                     <div>
-                        <div class="modal-mini-label">
-                            Ordem do Serviço
-                        </div>
-
-                        <h2 id="detTitulo">
-                            Carregando...
-                        </h2>
+                        <div class="modal-mini-label">Ordem do Serviço</div>
+                        <h2 id="detTitulo">Carregando...</h2>
                     </div>
-
-                    <button class="close-btn" onclick="fecharDetalhes()">
-                        ✕
-                    </button>
-
+                    <button class="close-btn" onclick="fecharDetalhes()">✕</button>
                 </div>
 
                 <div class="modal-badges">
-
-                    <span class="status" id="detStatus">
-                        <!-- Status -->
-                    </span>
-
+                    <span class="status" id="detStatus"></span>
                     <span class="badge-soft">
                         <i class="bi bi-calendar3"></i>
                         <span id="detData"></span>
                     </span>
-
                 </div>
-
             </div>
 
-            <!-- BODY -->
             <div class="modal-chamado-body">
-
-                <!-- GRID -->
                 <div class="detalhes-grid">
-
-                    <!-- OPERADOR -->
                     <div class="detail-card">
-
-                        <div class="detail-icon">
-                            👨‍🔧
-                        </div>
-
+                        <div class="detail-icon">👨‍🔧</div>
                         <div>
-                            <div class="detail-label">
-                                Técnico responsável
-                            </div>
-
-                            <div class="detail-value" id="detOperador">
-                                Não atribuído
-                            </div>
+                            <div class="detail-label">Técnico responsável</div>
+                            <div class="detail-value" id="detOperador">Não atribuído</div>
                         </div>
-
                     </div>
 
-                    <!-- STATUS -->
                     <div class="detail-card">
-
-                        <div class="detail-icon">
-                            📌
-                        </div>
-
+                        <div class="detail-icon">📌</div>
                         <div>
-                            <div class="detail-label">
-                                Situação atual
-                            </div>
-
-                            <div class="detail-value" id="detStatusValue">
-                                Em acompanhamento
-                            </div>
+                            <div class="detail-label">Situação atual</div>
+                            <div class="detail-value" id="detStatusValue">Em acompanhamento</div>
                         </div>
-
                     </div>
-
                 </div>
 
-                <!-- DESCRIÇÃO -->
                 <div class="section-box">
-
-                    <div class="section-title">
-                        📝 Descrição do chamado
-                    </div>
-
+                    <div class="section-title">📝 Descrição do chamado</div>
                     <div class="descricao-box" id="detDescricao"></div>
-
                 </div>
-
-                <!-- TIMELINE -->
-                <!-- <div class="section-box">
-
-                <div class="section-title">
-                    📅 Histórico
-                </div>
-
-                <div class="timeline">
-
-                    <div class="timeline-item">
-                        <div class="timeline-dot"></div>
-
-                        <div class="timeline-content">
-                            <strong>Chamado criado</strong>
-                            <span id="detData"></span>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-dot warning"></div>
-
-                        <div class="timeline-content">
-                            Aguardando atualização do operador
-                        </div>
-                    </div>
-
-                </div>
-
-            </div> -->
-
             </div>
 
         </div>
-
     </div>
 
     <script>
@@ -1282,80 +1018,50 @@ if (isset($_POST["nova_os"])) {
             document.body.style.overflow = "auto";
         }
 
-        // fechar clicando fora
-        window.onclick = function(e) {
-            const modal = document.getElementById("modal");
-            if (e.target === modal) {
-                fecharModal();
-            }
-        }
-
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") fecharModal();
-        });
-
-        function abrirDetalhes(
-            titulo,
-            descricao,
-            status,
-            operador,
-            data
-        ) {
+        function abrirDetalhes(titulo, descricao, status, operador, data) {
+            const detStatus = document.getElementById("detStatus");
+            detStatus.innerText = status;
+            
+            // Remove as classes anteriores do status do modal para evitar conflito de cor
+            detStatus.className = "status"; 
+            if(status === "Aberto") detStatus.classList.add("aberto");
+            if(status === "Em andamento") detStatus.classList.add("andamento");
+            if(status === "Finalizado") detStatus.classList.add("finalizado");
 
             document.getElementById("detTitulo").innerText = titulo;
-
             document.getElementById("detDescricao").innerText = descricao;
-
-            // const statusEl = document.getElementById("detStatus");
-
-            // statusEl.innerText = status;
-
-            // statusEl.className = "status";
-
-            // if (status === "Aberto") {
-            //     statusEl.classList.add("aberto");
-            // }
-
-            // if (status === "Em andamento") {
-            //     statusEl.classList.add("andamento");
-            // }
-
-            // if (status === "Finalizado") {
-            //     statusEl.classList.add("finalizado");
-            // }
-
             document.getElementById("detOperador").innerText = operador;
-
             document.getElementById("detStatusValue").innerText = status || "Aguardando atualização";
-
             document.getElementById("detData").innerText = data;
-
-            document.getElementById("modalDetalhes")
-                .classList.add("active");
-
+            document.getElementById("modalDetalhes").classList.add("active");
             document.body.style.overflow = "hidden";
         }
 
         function fecharDetalhes() {
-
-            document.getElementById("modalDetalhes")
-                .classList.remove("active");
-
+            document.getElementById("modalDetalhes").classList.remove("active");
             document.body.style.overflow = "auto";
         }
 
+        // 🔥 Correção unificada para fechar qualquer modal ao clicar fora
         window.onclick = function(e) {
-            const modal = document.getElementById("modalDetalhes");
-            if (e.target === modal) {
+            const modalNovo = document.getElementById("modal");
+            const modalDet = document.getElementById("modalDetalhes");
+            
+            if (e.target === modalNovo) {
+                fecharModal();
+            }
+            if (e.target === modalDet) {
                 fecharDetalhes();
             }
         }
 
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") fecharDetalhes();
+            if (e.key === "Escape") {
+                fecharModal();
+                fecharDetalhes();
+            }
         });
     </script>
 
 </body>
-
 </html>

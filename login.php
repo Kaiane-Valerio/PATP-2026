@@ -263,33 +263,39 @@ button:hover{
 
         <form method="POST">
 
-            <input 
-                type="email" 
-                name="email" 
-                placeholder="Digite seu email" 
-                required
-            >
+        <form method="POST">
 
-            <input 
-                type="password" 
-                name="senha" 
-                placeholder="Digite sua senha" 
-                required
-            >
+        <input 
+            type="email" 
+            name="email" 
+            placeholder="Digite seu email" 
+            required
+        >
 
-            <button type="submit">
-                Entrar
-            </button>
+        <input 
+            type="password" 
+            name="senha" 
+            placeholder="Digite sua senha" 
+            required
+        >
+
+        <button type="submit">
+            Entrar
+        </button>
 
         </form>
+
+        <div class="link">
+            <a href="esqueci_senha.php">
+                Esqueci minha senha?
+            </a>
+        </div>
 
         <div class="link">
             <a href="cadastro.php">
                 Criar conta
             </a>
         </div>
-
-    </div>
 
 </div>
 

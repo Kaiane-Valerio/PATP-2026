@@ -17,10 +17,6 @@ if (isset($_SESSION["operador_nome"])) {
 
 
 $primeiraLetra = strtoupper(substr($nomeUsuario, 0, 1));
-
-if ($nomeUsuario === "Kauê Gabriel Magarinos") {
-    $primeiraLetra = "🧑‍💻";
-}
 ?>
 
 <!DOCTYPE html>
