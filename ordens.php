@@ -50,20 +50,10 @@ if (isset($_GET["status"], $_GET["id"])) {
     $status = $_GET["status"];
     $id = (int) $_GET["id"];
 
-    if ($status === "Finalizado") {
-
-        $sql = "UPDATE chamado
-                SET status = :status,
-                    data_finalizacao = NOW()
-                WHERE id = :id
-                AND (operador_id IS NULL OR operador_id = :operador_id)";
-    } else {
-
-        $sql = "UPDATE chamado
-                SET status = :status
-                WHERE id = :id
-                AND (operador_id IS NULL OR operador_id = :operador_id)";
-    }
+    $sql = "UPDATE chamado
+            SET status = :status
+            WHERE id = :id
+            AND (operador_id IS NULL OR operador_id = :operador_id)";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -72,7 +62,6 @@ if (isset($_GET["status"], $_GET["id"])) {
         ":operador_id" => $operadorId
     ]);
 }
-
 // ================== EXCLUIR ==================
 if (isset($_GET["excluir"])) {
 
